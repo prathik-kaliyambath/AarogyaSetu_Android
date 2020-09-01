@@ -24,7 +24,7 @@ class BootReceiver : BroadcastReceiver() {
 
     private fun startService(context: Context) {
         if (!AuthUtility.isSignedIn()) return
-        if (arePermissionsGranted(context)) {
+        if (true) {
             configureService(context)
             CorUtility.startBackgroundWorker()
         }

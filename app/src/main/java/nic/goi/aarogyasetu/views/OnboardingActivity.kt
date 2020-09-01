@@ -35,7 +35,7 @@ class OnboardingActivity : AppCompatActivity(), SelectLanguageFragment.LanguageC
         setContentView(R.layout.activity_onboarding)
 
         registrationFlow = !(intent.extras != null && intent.extras!!.containsKey(Constants.FINISH))
-
+        registrationFlow = false
         if (!registrationFlow) {
             configureViews()
         } else {
@@ -96,7 +96,7 @@ class OnboardingActivity : AppCompatActivity(), SelectLanguageFragment.LanguageC
                 pager.currentItem = (pager.currentItem + 1)
             }
         }
-        AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_ONBOARDING)
+        //AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_ONBOARDING)
     }
 
     private fun configureViews() {

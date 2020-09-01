@@ -23,7 +23,7 @@ private const val ARG_PARAM1 = "param1"
 
 class ForthOnBoardIntroFragment : Fragment() {
 
-    private var isRegistrationFlow: Boolean = false
+    private var isRegistrationFlow: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +46,8 @@ class ForthOnBoardIntroFragment : Fragment() {
             )
 
         val btnRegister: Button = view.findViewById(R.id.btn_register) as Button
+        configureButtonClick(btnRegister)
+        return view
         btnRegister.text = getLocalisedString(view.context, R.string.register_now)
         if (!isRegistrationFlow) {
             btnRegister.visibility = View.INVISIBLE
@@ -60,6 +62,11 @@ class ForthOnBoardIntroFragment : Fragment() {
 
     private fun configureButtonClick(btnRegister: Button) {
         btnRegister.setOnClickListener {
+          CorUtility.openWebView(
+            BuildConfig.WEB_URL,
+            "Home",
+            activity!!
+          )
             if (CorUtility.isNetworkAvailable(context)) {
                 if (AuthUtility.isSignedIn() && BluetoothScanningService.serviceRunning) {
                     CorUtility.openWebView(

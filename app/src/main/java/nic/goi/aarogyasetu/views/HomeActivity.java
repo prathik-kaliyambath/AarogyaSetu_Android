@@ -64,7 +64,7 @@ import nic.goi.aarogyasetu.CoronaApplication;
 import nic.goi.aarogyasetu.R;
 import nic.goi.aarogyasetu.analytics.EventNames;
 import nic.goi.aarogyasetu.analytics.ScreenNames;
-import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil;
+//import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil;
 import nic.goi.aarogyasetu.prefs.SharedPref;
 import nic.goi.aarogyasetu.prefs.SharedPrefsConstants;
 import nic.goi.aarogyasetu.utility.AnalyticsUtils;
@@ -217,7 +217,6 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
         registerReceiver(mBluetoothStatusChangeReceiver, filter);
         handleShare();
         checkForUpdates();
-
         doNotShowBack = getIntent().getBooleanExtra(HomeActivity.DO_NOT_SHOW_BACK, false);
 
         setupNavigationMenu();
@@ -228,9 +227,8 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
         } else {
             loadUrl(getCurrentBaseURL());
         }
-
         final boolean needPermissions = getIntent().getBooleanExtra(EXTRA_ASK_PERMISSION, false);
-        if (needPermissions) {
+        if (false) {
             if (!CorUtility.arePermissionsGranted(this)) {
                 CorUtility.requestPermissions(this, REQUEST_CODE_PERMISSION);
             } else {
@@ -394,45 +392,46 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                 super.onReceivedHttpError(view, request, errorResponse);
-                if (errorResponse.getStatusCode() == 401) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    ExecutorHelper.getThreadPoolExecutor().execute(() -> {
-
-                        try {
-                            boolean isTokenUpdated = false;
-                            for (int i = 0; i < 3; i++) {
-                                final boolean isNewTokenUpdated = updateToken();
-                                if (isNewTokenUpdated) {
-                                    isTokenUpdated = true;
-                                    break;
-                                }
-                            }
-                            if (!isTokenUpdated) {
-                                throw new IOException();
-                            }
-                            AppExecutors.INSTANCE.runOnMain(() -> {
-                                try {
-                                    progressBar.setVisibility(View.GONE);
-                                    loadUrl(getCurrentBaseURL());
-                                } catch (Exception e) {
-                                    CorUtilityKt.reportException(e);
-                                }
-                                return null;
-                            });
-                        } catch (IOException e) {
-                            AuthUtility.logout(CoronaApplication.instance);
-                            // What to do here??
-                            AppExecutors.INSTANCE.runOnMain(() -> {
-                                if (isFinishing()) {
-                                    return null;
-                                }
-                                progressBar.setVisibility(View.GONE);
-                                // Maybe show some error here
-                                return null;
-                            });
-                        }
-                    });
-                }
+//                if (errorResponse.getStatusCode() == 401) {
+//                    progressBar.setVisibility(View.VISIBLE);
+//                    ExecutorHelper.getThreadPoolExecutor().execute(() -> {
+//
+//                        try {
+//                            boolean isTokenUpdated = true;
+////                            for (int i = 0; i < 3; i++) {
+////                                final boolean isNewTokenUpdated = updateToken();
+////                                if (isNewTokenUpdated) {
+////                                    isTokenUpdated = true;
+////                                    break;
+////                                }
+////                            }
+//                            if (!isTokenUpdated) {
+//                                throw new IOException();
+//                            }
+//                            AppExecutors.INSTANCE.runOnMain(() -> {
+//                                try {
+//                                    progressBar.setVisibility(View.GONE);
+//                                    Logger.d("SHEUSH","SHEUSHUS");
+//                                    loadUrl(getCurrentBaseURL());
+//                                } catch (Exception e) {
+//                                    CorUtilityKt.reportException(e);
+//                                }
+//                                return null;
+//                            });
+//                        } catch (IOException e) {
+//                            AuthUtility.logout(CoronaApplication.instance);
+//                            // What to do here??
+//                            AppExecutors.INSTANCE.runOnMain(() -> {
+//                                if (isFinishing()) {
+//                                    return null;
+//                                }
+//                                progressBar.setVisibility(View.GONE);
+//                                // Maybe show some error here
+//                                return null;
+//                            });
+//                        }
+//                    });
+//                }
             }
         });
     }
@@ -488,11 +487,11 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
     protected void onResume() {
         super.onResume();
         updateNavigationDrawer();
-        if (CorUtility.arePermissionsGranted(this)) {
-            checkBluetooth();
-        } else {
-            showPermissionAlert();
-        }
+//        if (CorUtility.arePermissionsGranted(this)) {
+//            checkBluetooth();
+//        } else {
+//            showPermissionAlert();
+//        }
         if (CorUtility.isForceUpgradeRequired()) {
             appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
@@ -685,7 +684,6 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
                     SharedPrefsConstants.UNIQUE_ID,
                     ""
             ));
-
             webView.loadUrl(url, headers);
         } else {
             openDefaultBrowser(url);
@@ -818,9 +816,10 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
     };
 
     private void showNoBluetoothDialog() {
-        if (!CorUtility.isBluetoothAvailable()) {
-            showDialog(new NoBluetoothDialog(), FRAG_NO_BT_DIALOG);
-        }
+        return;
+//        if (!CorUtility.isBluetoothAvailable()) {
+//            showDialog(new NoBluetoothDialog(), FRAG_NO_BT_DIALOG);
+//        }
     }
 
     private void hideNoBluetoothDialog() {
@@ -918,13 +917,13 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
     }
 
     private void showPermissionAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getLocalisedString(this, R.string.permission_alert_message)).setCancelable(false)
-                .setPositiveButton(Constants.ACTION_GOTO_SETTINGS, (dialog, which) -> openAppSettings()).setNegativeButton(Constants.ACTION_REMIND_LATER, (dialog, which) -> dialog.cancel());
-        AlertDialog alertDialog = builder.create();
-        if (!isFinishing()) {
-            alertDialog.show();
-        }
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage(getLocalisedString(this, R.string.permission_alert_message)).setCancelable(false)
+//                .setPositiveButton(Constants.ACTION_GOTO_SETTINGS, (dialog, which) -> openAppSettings()).setNegativeButton(Constants.ACTION_REMIND_LATER, (dialog, which) -> dialog.cancel());
+//        AlertDialog alertDialog = builder.create();
+//        if (!isFinishing()) {
+//            alertDialog.show();
+//        }
 
     }
 
@@ -1000,25 +999,25 @@ public class HomeActivity extends AppCompatActivity implements SelectLanguageFra
 
     private void checkForDataUpload() {
 
-        if (!FirebaseRemoteConfigUtil.getINSTANCE().isUploadEnabled() || SharedPref.getBooleanParams(getBaseContext(), Constants.PUSH_COVID_POSTIVE_P) || !AuthUtility.INSTANCE.isSignedIn()) // Put status and condition here if possible
-        {
-            homeNavigationView.hideShareData();
-        }
-
-        if (getIntent() != null && getIntent().hasExtra(Constants.PUSH) && getIntent().hasExtra(Constants.UPLOAD_TYPE)) {
-            String uploadType = getIntent().getStringExtra(Constants.UPLOAD_TYPE);
-            showSyncDataConsentDialog(uploadType);
-        }
+//        if (!FirebaseRemoteConfigUtil.getINSTANCE().isUploadEnabled() || SharedPref.getBooleanParams(getBaseContext(), Constants.PUSH_COVID_POSTIVE_P) || !AuthUtility.INSTANCE.isSignedIn()) // Put status and condition here if possible
+//        {
+//            homeNavigationView.hideShareData();
+//        }
+//
+//        if (getIntent() != null && getIntent().hasExtra(Constants.PUSH) && getIntent().hasExtra(Constants.UPLOAD_TYPE)) {
+//            String uploadType = getIntent().getStringExtra(Constants.UPLOAD_TYPE);
+//            showSyncDataConsentDialog(uploadType);
+//        }
     }
 
     private void onUploadDataClicked() {
-        if (FirebaseRemoteConfigUtil.getINSTANCE().disableSyncChoice()) {
-            showSyncDataConsentDialog(Constants.UPLOAD_TYPES.SELF_CONSENT);
-        } else {
-            showSyncDataDialog();
-        }
-
-        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_OPEN_UPLOAD_CONSENT_SCREEN, EventNames.EVENT_OPEN_WEB_VIEW);
+//        if (FirebaseRemoteConfigUtil.getINSTANCE().disableSyncChoice()) {
+//            showSyncDataConsentDialog(Constants.UPLOAD_TYPES.SELF_CONSENT);
+//        } else {
+//            showSyncDataDialog();
+//        }
+//
+//        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_OPEN_UPLOAD_CONSENT_SCREEN, EventNames.EVENT_OPEN_WEB_VIEW);
     }
 
     private void startUploading(String uploadType) {

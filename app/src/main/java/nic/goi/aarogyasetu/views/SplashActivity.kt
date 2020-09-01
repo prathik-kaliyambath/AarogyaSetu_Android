@@ -17,7 +17,7 @@ import nic.goi.aarogyasetu.CoronaApplication
 import nic.goi.aarogyasetu.analytics.EventNames
 import nic.goi.aarogyasetu.analytics.ScreenNames
 import nic.goi.aarogyasetu.background.BluetoothScanningService
-import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil
+//import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil
 import nic.goi.aarogyasetu.prefs.SharedPref
 import nic.goi.aarogyasetu.prefs.SharedPrefsConstants
 import nic.goi.aarogyasetu.utility.AnalyticsUtils
@@ -54,7 +54,7 @@ class SplashActivity : AppCompatActivity(), SelectLanguageFragment.LanguageChang
     }
 
     private fun startSplashLogic() {
-        FirebaseRemoteConfigUtil.INSTANCE.init()
+        //FirebaseRemoteConfigUtil.INSTANCE.init()
         if (isNetworkAvailable(this@SplashActivity)) {
             setBluetoothName()
             CorUtility.checkAppMeta()
@@ -70,6 +70,7 @@ class SplashActivity : AppCompatActivity(), SelectLanguageFragment.LanguageChang
      */
     private fun proceedToNextSteps() {
         CoronaApplication.warmUpLocation()
+      launchHomeScreen()
         if (SharedPref.hasKey(this, SharedPrefsConstants.USER_SELECTED_LANGUAGE_CODE)) {
             CorUtility.checkStatus(this)
             Handler().postDelayed({

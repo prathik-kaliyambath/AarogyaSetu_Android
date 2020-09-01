@@ -12,7 +12,7 @@ class BluetoothLocationReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         Logger.d(TAG, "onReceive action: ${intent?.action} isRunning: ${BluetoothScanningService.serviceRunning}")
-        if (!BluetoothScanningService.serviceRunning) {
+        if (false) {
             intent?.action?.let {
                 if (LocationManager.PROVIDERS_CHANGED_ACTION == it) {
                     CorUtility.startBackgroundWorker()

@@ -1,7 +1,7 @@
 package nic.goi.aarogyasetu.utility
 
 import android.os.Bundle
-import com.google.firebase.analytics.FirebaseAnalytics
+//import com.google.firebase.analytics.FirebaseAnalytics
 import nic.goi.aarogyasetu.BuildConfig
 import nic.goi.aarogyasetu.CoronaApplication
 import nic.goi.aarogyasetu.analytics.EventParams
@@ -27,33 +27,33 @@ object AnalyticsUtils {
     @JvmStatic
     fun updateUserTraits() {
         thread {
-            val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
+            //val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
             val uniqueId = SharedPref.getStringParams(
                 CoronaApplication.getInstance(),
                 SharedPrefsConstants.UNIQUE_ID,
                 ""
             )
             val installData = CorUtility.getInstallTimes()
-            firebaseAnalytics.setUserProperty(
-                UserTraits.TRAITS_IS_LOGGED_IN,
-                "${AuthUtility.isSignedIn()}"
-            )
-
-            firebaseAnalytics.setUserProperty(
-                UserTraits.TRAITS_VERSION_CODE,
-                "${BuildConfig.VERSION_CODE}"
-            )
-
-            firebaseAnalytics.setUserProperty(
-                UserTraits.TRAITS_LANGUAGE,
-                LocaleManager.getLanguage(CoronaApplication.instance)
-            )
-            try {
-                firebaseAnalytics.setUserProperty(
-                    UserTraits.INSTALL_SOURCE,
-                    CoronaApplication.instance.packageManager.getInstallerPackageName(BuildConfig.APPLICATION_ID)
-                )
-            }catch (e:Exception){}
+//            firebaseAnalytics.setUserProperty(
+//                UserTraits.TRAITS_IS_LOGGED_IN,
+//                "${AuthUtility.isSignedIn()}"
+//            )
+//
+//            firebaseAnalytics.setUserProperty(
+//                UserTraits.TRAITS_VERSION_CODE,
+//                "${BuildConfig.VERSION_CODE}"
+//            )
+//
+//            firebaseAnalytics.setUserProperty(
+//                UserTraits.TRAITS_LANGUAGE,
+//                LocaleManager.getLanguage(CoronaApplication.instance)
+//            )
+//            try {
+//                firebaseAnalytics.setUserProperty(
+//                    UserTraits.INSTALL_SOURCE,
+//                    CoronaApplication.instance.packageManager.getInstallerPackageName(BuildConfig.APPLICATION_ID)
+//                )
+//            }catch (e:Exception){}
         }
     }
 
@@ -74,15 +74,15 @@ object AnalyticsUtils {
             bundle.putAll(extras)
         }
 
-        val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
-        firebaseAnalytics.logEvent(eventName, bundle)
+        //val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
+        //firebaseAnalytics.logEvent(eventName, bundle)
     }
 
     @JvmStatic
     @JvmOverloads
     fun sendEvent(eventName: String, bundle: Bundle? = null) {
-        val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
-        firebaseAnalytics.logEvent(eventName, bundle)
+//        val firebaseAnalytics = FirebaseAnalytics.getInstance(CoronaApplication.instance)
+//        firebaseAnalytics.logEvent(eventName, bundle)
     }
 
 }

@@ -76,7 +76,10 @@ class LoginBottomSheet : BottomSheetDialogFragment(), ViewTreeObserver.OnGlobalL
      * This method is used to verify user with OTP.
      */
     private fun signInWithPhoneAuthCredential(otp: String) {
-        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_VALIDATE_OTP, ScreenNames.SCREEN_LOGIN)
+        contentView.otp_validation_layout.rootView.progress_bar_otp?.visibility =
+        View.GONE
+        onBoardingViewModel.signedInState.value = true
+        //AnalyticsUtils.sendBasicEvent(EventNames.EVENT_VALIDATE_OTP, ScreenNames.SCREEN_LOGIN)
         contentView.otp_validation_layout.rootView.progress_bar_otp?.visibility = View.VISIBLE
         AuthUtility.verifyOtp(
             phoneNumberValidationViewModel.phoneNumber,
@@ -86,10 +89,10 @@ class LoginBottomSheet : BottomSheetDialogFragment(), ViewTreeObserver.OnGlobalL
                     if (isAdded) {
                         contentView.otp_validation_layout.rootView.progress_bar_otp?.visibility =
                             View.GONE
-                        if (CorUtility.isBluetoothAvailable()) {
-                            val mBTA = BluetoothAdapter.getDefaultAdapter()
-                            mBTA.startDiscovery()
-                        }
+//                        if (CorUtility.isBluetoothAvailable()) {
+//                            val mBTA = BluetoothAdapter.getDefaultAdapter()
+//                            mBTA.startDiscovery()
+//                        }
                         dismissAllowingStateLoss()
                         onBoardingViewModel.signedInState.value = true
                     }
@@ -102,8 +105,8 @@ class LoginBottomSheet : BottomSheetDialogFragment(), ViewTreeObserver.OnGlobalL
                         contentView.otp_validation_layout.rootView.otp_layout?.isErrorEnabled = true
                         contentView.otp_validation_layout.rootView.otp_layout?.error =
                             getLocalisedString(context, authError.errorMsg)
-                        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_VALIDATE_OTP_FAILED, ScreenNames.SCREEN_LOGIN,
-                            e?.localizedMessage?:getString(authError.errorMsg))
+//                        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_VALIDATE_OTP_FAILED, ScreenNames.SCREEN_LOGIN,
+//                            e?.localizedMessage?:getString(authError.errorMsg))
                     }
                 }
             })
@@ -219,28 +222,35 @@ class LoginBottomSheet : BottomSheetDialogFragment(), ViewTreeObserver.OnGlobalL
         rootView.phone_number_validation_layout.rootView.validate_phone.text =
             getLocalisedString(context, R.string.submit)
         rootView.phone_number_validation_layout.rootView.validate_phone.setOnClickListener {
+            phoneNumberValidationViewModel.phoneNumberValidation.value = true
 
-            if (android.util.Patterns.PHONE.matcher(rootView.phone_number_validation_layout.rootView.phone_num.text.toString().trim()).matches() && rootView.phone_number_validation_layout.rootView.phone_num.text.toString().trim().length == 10) {
-                if (CorUtility.isNetworkAvailable(context)) {
-                    rootView.phone_number_validation_layout.rootView.progress_bar?.visibility =
-                        View.VISIBLE
-                    phoneNumberValidationViewModel.phoneNumberValidation.value = true
-                    sendValidationCode(
-                        "+91" + rootView.phone_number_validation_layout.rootView.phone_num?.text.toString().trim()
-                    )
-                    rootView.phone_number_validation_layout.rootView.phone_number_layout?.error =
-                        null
-                } else {
-                    Toast.makeText(
-                        context,
-                        getLocalisedString(context, R.string.error_network_error),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                rootView.phone_number_validation_layout.rootView.phone_number_layout?.error =
-                    getLocalisedString(context, R.string.please_enter_a_valid_number)
-            }
+            rootView.phone_number_validation_layout.rootView.phone_number_layout?.error = null
+            sendValidationCode(
+                "+91" + rootView.phone_number_validation_layout.rootView.phone_num?.text.toString().trim()
+            )
+//            if (android.util.Patterns.PHONE.matcher(rootView.phone_number_validation_layout.rootView.phone_num.text.toString().trim()).matches() && rootView.phone_number_validation_layout.rootView.phone_num.text.toString().trim().length == 10) {
+//              phoneNumberValidationViewModel.phoneNumberValidation.value = true
+//              if (CorUtility.isNetworkAvailable(context)) {
+//                    rootView.phone_number_validation_layout.rootView.progress_bar?.visibility =
+//                        View.VISIBLE
+//                    phoneNumberValidationViewModel.phoneNumberValidation.value = true
+//                    print("SOSOSOSOS")
+////                    sendValidationCode(
+////                        "+91" + rootView.phone_number_validation_layout.rootView.phone_num?.text.toString().trim()
+////                    )
+//                    rootView.phone_number_validation_layout.rootView.phone_number_layout?.error =
+//                        null
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        getLocalisedString(context, R.string.error_network_error),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            } else {
+//                rootView.phone_number_validation_layout.rootView.phone_number_layout?.error =
+//                    getLocalisedString(context, R.string.please_enter_a_valid_number)
+//            }
         }
 
         rootView.phone_number_validation_layout.rootView.back.setOnClickListener {
@@ -318,7 +328,8 @@ class LoginBottomSheet : BottomSheetDialogFragment(), ViewTreeObserver.OnGlobalL
      * This method is used to start Login process on the server and send OTP on the mobile number.
      */
     private fun sendValidationCode(phoneNumber: String) {
-        AnalyticsUtils.sendBasicEvent(EventNames.EVENT_GET_OTP, ScreenNames.SCREEN_LOGIN)
+        //AnalyticsUtils.sendBasicEvent(EventNames.EVENT_GET_OTP, ScreenNames.SCREEN_LOGIN)
+
         AuthUtility.signIn(phoneNumber, object : UserSignInListener {
             override fun onAuthError(e: Exception?, authError: AuthError) {
                 if (isAdded) {

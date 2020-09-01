@@ -23,34 +23,34 @@ class SmsReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
-            val extras = intent.extras
-            extras?.let {
-                val status = extras.get(SmsRetriever.EXTRA_STATUS) as? Status
-                when (status?.statusCode) {
-
-                    CommonStatusCodes.SUCCESS -> {
-
-                        val message = extras.get(SmsRetriever.EXTRA_SMS_MESSAGE) as String
-
-                        val pattern = Pattern.compile(OTP_REGEX)
-                        val matcher = pattern.matcher(message)
-
-                        if (matcher.find()) {
-                            otpReceiver?.onOTPReceived(matcher.group(0))
-                            return
-                        } else {
-                            // do nothing
-                        }
-                    }
-                    CommonStatusCodes.TIMEOUT -> {
-                        otpReceiver?.onOTPTimeOut()
-                    }
-                    else -> {
-                    }
-                }
-            }
-        }
+//        if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+//            val extras = intent.extras
+//            extras?.let {
+//                val status = extras.get(SmsRetriever.EXTRA_STATUS) as? Status
+//                when (status?.statusCode) {
+//
+//                    CommonStatusCodes.SUCCESS -> {
+//
+//                        val message = extras.get(SmsRetriever.EXTRA_SMS_MESSAGE) as String
+//
+//                        val pattern = Pattern.compile(OTP_REGEX)
+//                        val matcher = pattern.matcher(message)
+//
+//                        if (matcher.find()) {
+//                            otpReceiver?.onOTPReceived(matcher.group(0))
+//                            return
+//                        } else {
+//                            // do nothing
+//                        }
+//                    }
+//                    CommonStatusCodes.TIMEOUT -> {
+//                        otpReceiver?.onOTPTimeOut()
+//                    }
+//                    else -> {
+//                    }
+//                }
+//            }
+//        }
     }
 
     interface OTPListener {

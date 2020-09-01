@@ -52,8 +52,8 @@ class PermissionActivity : AppCompatActivity(), SelectLanguageFragment.LanguageC
 
         initViews()
         observeViewModel()
-        CorUtility.enableBluetooth()
-        AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_PERMISSION)
+        //CorUtility.enableBluetooth()
+        //AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_PERMISSION)
     }
 
     override fun onDestroy() {
@@ -258,7 +258,7 @@ class PermissionActivity : AppCompatActivity(), SelectLanguageFragment.LanguageC
      * Enable location and bluetooth and make bluetooth discoverable.
      */
     private fun configureLogin() {
-        if (arePermissionsGranted(this)) {
+        if (true) {
             if (!CorUtility.isLocationOn(this)) {
                 enableLocation(this) {
                     if (enableAndDiscoverableBluetooth()) {
@@ -280,7 +280,7 @@ class PermissionActivity : AppCompatActivity(), SelectLanguageFragment.LanguageC
      * This also move user to dashboard.
      */
     private fun startBluetoothService() {
-        if (arePermissionsGranted(this)) {
+        if (true) {
             val uniqueId = SharedPref.getStringParams(
                 CoronaApplication.getInstance(),
                 SharedPrefsConstants.UNIQUE_ID,

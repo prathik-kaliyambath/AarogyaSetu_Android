@@ -21,8 +21,8 @@ public class UploadDataToServerWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        UploadDataUtil uploadDataUtil = new UploadDataUtil();
-        uploadDataUtil.start();
+//        UploadDataUtil uploadDataUtil = new UploadDataUtil();
+//        uploadDataUtil.start();
         return Result.success();
     }
 }

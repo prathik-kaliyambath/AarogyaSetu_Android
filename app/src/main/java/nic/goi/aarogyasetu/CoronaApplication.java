@@ -11,7 +11,7 @@ import androidx.work.WorkManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.LocationServices;
-import com.google.firebase.FirebaseApp;
+//import com.google.firebase.FirebaseApp;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -27,7 +27,7 @@ public class CoronaApplication extends Application implements Configuration.Prov
 
     public static CoronaApplication instance;
      static Location lastKnownLocation = null;
-    
+
     public static CoronaApplication getInstance() {
         return instance;
     }
@@ -35,7 +35,7 @@ public class CoronaApplication extends Application implements Configuration.Prov
     @Override
     public void onCreate() {
         super.onCreate();
-        FirebaseApp.initializeApp(this);
+        //FirebaseApp.initializeApp(this);
         instance = this;
         WorkManager.initialize(
                 this,
@@ -82,13 +82,13 @@ public class CoronaApplication extends Application implements Configuration.Prov
     }
     /* warmUpLocation */
     public static void warmUpLocation() {
-        if (CorUtility.Companion.isLocationPermissionAvailable(CoronaApplication.getInstance())) {
-            LocationServices.getFusedLocationProviderClient(CoronaApplication.getInstance()).getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    lastKnownLocation = location;
-                }
-            });
-        }
+//        if (CorUtility.Companion.isLocationPermissionAvailable(CoronaApplication.getInstance())) {
+////            LocationServices.getFusedLocationProviderClient(CoronaApplication.getInstance()).getLastLocation().addOnSuccessListener(location -> {
+////                if (location != null) {
+////                    lastKnownLocation = location;
+////                }
+////            });
+//        }
     }
 
     public Context getContext() {

@@ -21,11 +21,11 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) : Worke
             Intent(mContext, nic.goi.aarogyasetu.background.BluetoothScanningService::class.java)
         intent.putExtra(Constants.FROM_MY_WORKER, true)
 
-        startService(intent)
+        //startService(intent)
 
-        if (CorUtility.isBluetoothAvailable()) {
-            BluetoothAdapter.getDefaultAdapter().startDiscovery()
-        }
+//        if (CorUtility.isBluetoothAvailable()) {
+//            BluetoothAdapter.getDefaultAdapter().startDiscovery()
+//        }
         CorUtility.remove30DaysOldData()
         return Result.success()
 
@@ -37,7 +37,7 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) : Worke
             nic.goi.aarogyasetu.prefs.SharedPrefsConstants.UNIQUE_ID,
             Constants.EMPTY
         )
-        if (!BluetoothScanningService.serviceRunning && uniqueId.isNotEmpty()) {
+        if (true) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mContext.startForegroundService(intent)
             } else {

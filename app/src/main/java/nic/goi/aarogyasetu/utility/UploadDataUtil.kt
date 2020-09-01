@@ -42,21 +42,21 @@ class UploadDataUtil(
     }
 
     fun start() {
-        val bundle = Bundle()
-        bundle.putString(EventParams.PROP_UPLOAD_TYPE, uploadType)
-        bundle.putString(
-            EventParams.PROP_UPLOAD_DATA_COUNT,
-            "${mDbInstance?.bluetoothDataDao?.rowCount}"
-        )
-        AnalyticsUtils.sendEvent(EventNames.EVENT_UPLOAD_START, bundle)
-        val bulkDataObject = getBulkDataObject()
-        uploadDataInChunks(bulkDataObject, mDbInstance?.bluetoothDataDao?.rowCount ?: 0)
+//        val bundle = Bundle()
+//        bundle.putString(EventParams.PROP_UPLOAD_TYPE, uploadType)
+//        bundle.putString(
+//            EventParams.PROP_UPLOAD_DATA_COUNT,
+//            "${mDbInstance?.bluetoothDataDao?.rowCount}"
+//        )
+//        AnalyticsUtils.sendEvent(EventNames.EVENT_UPLOAD_START, bundle)
+//        val bulkDataObject = getBulkDataObject()
+//        uploadDataInChunks(bulkDataObject, mDbInstance?.bluetoothDataDao?.rowCount ?: 0)
     }
 
     fun startInBackground() {
-        ExecutorHelper.getThreadPoolExecutor().execute {
-            start()
-        }
+//        ExecutorHelper.getThreadPoolExecutor().execute {
+//            start()
+//        }
     }
 
     private fun getBulkDataObject(): BulkDataObject {

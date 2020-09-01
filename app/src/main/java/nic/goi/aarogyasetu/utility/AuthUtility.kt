@@ -69,11 +69,11 @@ object AuthUtility {
     fun getMobile(): String? = authSpHelper.getString(KEY_MOBILE_NUMBER, null)
 
     private fun setMobile(mobile: String?) {
-        if (mobile.isNullOrBlank()) {
-            authSpHelper.removeKey(KEY_MOBILE_NUMBER)
-        } else {
-            authSpHelper.putString(KEY_MOBILE_NUMBER, mobile)
-        }
+//        if (mobile.isNullOrBlank()) {
+//            authSpHelper.removeKey(KEY_MOBILE_NUMBER)
+//        } else {
+//            authSpHelper.putString(KEY_MOBILE_NUMBER, mobile)
+//        }
     }
 
     private fun removeMobile() {
@@ -82,6 +82,9 @@ object AuthUtility {
 
     @AnyThread
     fun signIn(mobile: String, listener: UserSignInListener?) {
+        AppExecutors.runOnMain {
+          listener?.onAskOtp()
+        }
         if (isSignedIn()) return
 
         val client = nic.goi.aarogyasetu.network.NetworkClient.getRetrofitClient(
@@ -125,6 +128,15 @@ object AuthUtility {
 
     @AnyThread
     fun verifyOtp(mobile: String, otp: String, listener: UserVerifyListener?) {
+        val token = "token"
+        val refreshToken = "re_token"
+        setToken(token)
+        setRefreshToken(refreshToken)
+        setMobile(mobile)
+        AppExecutors.runOnMain {
+          listener?.onUserVerified(token)
+        }
+        return
         val client = nic.goi.aarogyasetu.network.NetworkClient.getRetrofitClient(
             false,
             true,

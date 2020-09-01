@@ -82,26 +82,26 @@ public class SelectLanguageFragment extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(@NotNull Dialog dialog, int style) {
         super.setupDialog(dialog, style);
-        View contentView = View.inflate(getContext(), R.layout.fragment_select_language, null);
-        dialog.setContentView(contentView);
-        dialog.setCanceledOnTouchOutside(false);
-        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from((View) contentView.getParent());
-        DisplayMetrics displayMetrics = Objects.requireNonNull(getActivity()).getResources().getDisplayMetrics();
-        int height = displayMetrics.heightPixels;
-        int maxHeight = (int) (height * DIALOG_HEIGHT_RATIO);
-        bottomSheetBehavior.setPeekHeight(maxHeight);
-        initViews(contentView);
+//        View contentView = View.inflate(getContext(), R.layout.fragment_select_language, null);
+//        dialog.setContentView(contentView);
+//        dialog.setCanceledOnTouchOutside(false);
+//        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from((View) contentView.getParent());
+//        DisplayMetrics displayMetrics = Objects.requireNonNull(getActivity()).getResources().getDisplayMetrics();
+//        int height = displayMetrics.heightPixels;
+//        int maxHeight = (int) (height * DIALOG_HEIGHT_RATIO);
+//        bottomSheetBehavior.setPeekHeight(maxHeight);
+        //initViews(contentView);
     }
 
     private void initViews(View view) {
-        mNext = view.findViewById(R.id.btn_next);
-        mNext.setText(LocalizationUtil.getLocalisedString(getContext(), R.string.next));
-        List<LanguageDTO> languageList = LanguageList.getLanguageList();
-
-        onNextClick(languageList);
-        configureAdapter(view, languageList);
-
-        AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_LANGUAGE);
+//        mNext = view.findViewById(R.id.btn_next);
+//        mNext.setText(LocalizationUtil.getLocalisedString(getContext(), R.string.next));
+//        List<LanguageDTO> languageList = LanguageList.getLanguageList();
+//
+//        onNextClick(languageList);
+//        configureAdapter(view, languageList);
+//
+//        AnalyticsUtils.sendEvent(EventNames.EVENT_OPEN_LANGUAGE);
     }
 
     private void onNextClick(List<LanguageDTO> languageList) {

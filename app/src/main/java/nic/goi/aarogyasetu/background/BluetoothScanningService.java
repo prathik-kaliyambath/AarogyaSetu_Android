@@ -36,7 +36,7 @@ import nic.goi.aarogyasetu.CoronaApplication;
 import nic.goi.aarogyasetu.GattServer;
 import nic.goi.aarogyasetu.R;
 import nic.goi.aarogyasetu.db.DBManager;
-import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil;
+//import nic.goi.aarogyasetu.firebase.FirebaseRemoteConfigUtil;
 import nic.goi.aarogyasetu.location.RetrieveLocationService;
 import nic.goi.aarogyasetu.models.BluetoothData;
 import nic.goi.aarogyasetu.utility.AdaptiveScanHelper;
@@ -70,31 +70,31 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-            Logger.d(TAG, "onScanResult : Scanning : " + result.getDevice().getName());
-            if (CorUtility.isBluetoothPermissionAvailable(CoronaApplication.instance)) {
-                if (result == null || result.getDevice() == null || result.getDevice().getName() == null)
-                    return;
-                String deviceName = result.getDevice().getName();
-                clearList();
-                mAdaptiveScanHelper.addScanResult(result);
-                if (mData.contains(deviceName)) {
-                    return;
-                }
-
-                String txPower = Constants.EMPTY;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    txPower = String.valueOf(result.getTxPower());
-                }
-                String txPowerLevel = "";
-                if (result.getScanRecord() != null) {
-                    txPowerLevel = String.valueOf(result.getScanRecord().getTxPowerLevel());
-                }
-                BluetoothModel bluetoothModel = new BluetoothModel(result.getDevice().getName(),
-                        deviceName, result.getRssi(), txPower, txPowerLevel);
-                mData.add(deviceName);
-                storeDetectedUserDeviceInDB(bluetoothModel);
-                Logger.d(TAG, "onScanResult : Information Updated, Device : " + deviceName);
-            }
+            //Logger.d(TAG, "onScanResult : Scanning : " + result.getDevice().getName());
+//            if (CorUtility.isBluetoothPermissionAvailable(CoronaApplication.instance)) {
+//                if (result == null || result.getDevice() == null || result.getDevice().getName() == null)
+//                    return;
+//                String deviceName = result.getDevice().getName();
+//                clearList();
+//                mAdaptiveScanHelper.addScanResult(result);
+//                if (mData.contains(deviceName)) {
+//                    return;
+//                }
+//
+//                String txPower = Constants.EMPTY;
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//                    txPower = String.valueOf(result.getTxPower());
+//                }
+//                String txPowerLevel = "";
+//                if (result.getScanRecord() != null) {
+//                    txPowerLevel = String.valueOf(result.getScanRecord().getTxPowerLevel());
+//                }
+//                BluetoothModel bluetoothModel = new BluetoothModel(result.getDevice().getName(),
+//                        deviceName, result.getRssi(), txPower, txPowerLevel);
+//                mData.add(deviceName);
+//                storeDetectedUserDeviceInDB(bluetoothModel);
+//                Logger.d(TAG, "onScanResult : Information Updated, Device : " + deviceName);
+//            }
         }
 
         @Override
@@ -147,13 +147,13 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
      * Method to clear list after specified scan poll time for same device scanning
      */
     void clearList() {
-        long scanPollTime = FirebaseRemoteConfigUtil.getINSTANCE().getScanPollTime();
-        long pollTime = scanPollTime * 1000;
-        long difference = System.currentTimeMillis() - searchTimestamp;
-        if (difference >= pollTime && !mData.isEmpty()) {
-            searchTimestamp = System.currentTimeMillis();
-            mData.clear();
-        }
+        //long scanPollTime = FirebaseRemoteConfigUtil.getINSTANCE().getScanPollTime();
+//        long pollTime = scanPollTime * 1000;
+//        long difference = System.currentTimeMillis() - searchTimestamp;
+//        if (difference >= pollTime && !mData.isEmpty()) {
+//            searchTimestamp = System.currentTimeMillis();
+//            mData.clear();
+//        }
     }
 
     /**
@@ -185,40 +185,41 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
      * @param scanMode
      */
     private void discover(int scanMode) {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter == null) {
-            return;
-        }
-        mBluetoothLeScanner = adapter.getBluetoothLeScanner();
-        if (mBluetoothLeScanner == null) {
-            return;
-        }
-        List<ScanFilter> filters = new ArrayList<>();
-
-        ScanFilter filter = new ScanFilter.Builder()
-                .setServiceUuid(new ParcelUuid(UUID.fromString(BuildConfig.SERVICE_UUID)))
-                .build();
-        filters.add(filter);
-        ScanSettings.Builder settings = new ScanSettings.Builder()
-                .setScanMode(scanMode);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            settings.setMatchMode(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            settings.setLegacy(false);
-            settings.setPhy(BluetoothDevice.PHY_LE_1M);
-        }
-        try {
-            if (isBluetoothAvailable()) {
-                mBluetoothLeScanner.startScan(filters, settings.build(), mScanCallback);
-            } else {
-                Logger.e(TAG, "startingScan failed : Bluetooth not available");
-            }
-        } catch (Exception ex) {
-            //Handle Android internal exception for BT adapter not turned ON(Known Android bug)
-            CorUtilityKt.reportException(ex);
-        }
+        return;
+        //BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+//        if (adapter == null) {
+//            return;
+//        }
+//        mBluetoothLeScanner = adapter.getBluetoothLeScanner();
+//        if (mBluetoothLeScanner == null) {
+//            return;
+//        }
+//        List<ScanFilter> filters = new ArrayList<>();
+//
+//        ScanFilter filter = new ScanFilter.Builder()
+//                .setServiceUuid(new ParcelUuid(UUID.fromString(BuildConfig.SERVICE_UUID)))
+//                .build();
+//        filters.add(filter);
+//        ScanSettings.Builder settings = new ScanSettings.Builder()
+//                .setScanMode(scanMode);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            settings.setMatchMode(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            settings.setLegacy(false);
+//            settings.setPhy(BluetoothDevice.PHY_LE_1M);
+//        }
+//        try {
+////            if (isBluetoothAvailable()) {
+////                mBluetoothLeScanner.startScan(filters, settings.build(), mScanCallback);
+////            } else {
+////                Logger.e(TAG, "startingScan failed : Bluetooth not available");
+////            }
+//        } catch (Exception ex) {
+//            //Handle Android internal exception for BT adapter not turned ON(Known Android bug)
+//            CorUtilityKt.reportException(ex);
+//        }
     }
 
 
@@ -318,9 +319,9 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
             if (retrieveLocationService != null) {
                 retrieveLocationService.stopService();
             }
-            if (mBluetoothLeScanner != null && isBluetoothAvailable()) {
-                mBluetoothLeScanner.stopScan(mScanCallback);
-            }
+//            if (mBluetoothLeScanner != null && isBluetoothAvailable()) {
+//                mBluetoothLeScanner.stopScan(mScanCallback);
+//            }
             if (timer != null) {
                 timer.cancel();
             }
@@ -341,12 +342,12 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
 
     private void registerBluetoothStateListener() {
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mBluetoothStatusChangeReceiver, filter);
+        //registerReceiver(mBluetoothStatusChangeReceiver, filter);
     }
 
     private void registerLocationStateListener() {
         IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
-        registerReceiver(mLocationChangeListener, filter);
+        //registerReceiver(mLocationChangeListener, filter);
     }
 
     private BroadcastReceiver mLocationChangeListener = new BroadcastReceiver() {
@@ -354,22 +355,22 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             Notification notification;
-            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                if (!CorUtility.isLocationOn(CoronaApplication.instance.getContext())) {
-                    notification = getNotification(Constants.PLEASE_ALLOW_LOCATION);
-                    updateNotification(notification);
-
-                } else {
-                    if (isBluetoothAvailable()) {
-                        notification = getNotification(Constants.NOTIFICATION_DESC);
-                        updateNotification(notification);
-                    } else {
-                        notification = getNotification(Constants.PLEASE_ALLOW_BLUETOOTH);
-                        updateNotification(notification);
-                    }
-
-                }
-            }
+//            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
+//                if (!CorUtility.isLocationOn(CoronaApplication.instance.getContext())) {
+//                    notification = getNotification(Constants.PLEASE_ALLOW_LOCATION);
+//                    updateNotification(notification);
+//
+//                } else {
+//                    if (isBluetoothAvailable()) {
+//                        notification = getNotification(Constants.NOTIFICATION_DESC);
+//                        updateNotification(notification);
+//                    } else {
+//                        notification = getNotification(Constants.PLEASE_ALLOW_BLUETOOTH);
+//                        updateNotification(notification);
+//                    }
+//
+//                }
+//            }
         }
     };
 
@@ -378,32 +379,32 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             Notification notification;
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                        BluetoothAdapter.ERROR);
-                switch (state) {
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        mGattServer.stopServer();
-                        break;
-
-                    case BluetoothAdapter.STATE_OFF:
-                        notification = getNotification(Constants.PLEASE_ALLOW_BLUETOOTH);
-                        updateNotification(notification);
-                        mAdaptiveScanHelper.stop();
-                        break;
-                    case BluetoothAdapter.STATE_ON:
-                        if (!CorUtility.isLocationOn(CoronaApplication.instance.getContext())) {
-                            notification = getNotification(Constants.PLEASE_ALLOW_LOCATION);
-                            updateNotification(notification);
-                        } else {
-                            notification = getNotification(Constants.NOTIFICATION_DESC);
-                            updateNotification(notification);
-                        }
-                        mGattServer.addGattService();
-                        advertiseAndScan();
-                        break;
-                }
-            }
+//            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+//                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+//                        BluetoothAdapter.ERROR);
+//                switch (state) {
+//                    case BluetoothAdapter.STATE_TURNING_OFF:
+//                        mGattServer.stopServer();
+//                        break;
+//
+//                    case BluetoothAdapter.STATE_OFF:
+//                        notification = getNotification(Constants.PLEASE_ALLOW_BLUETOOTH);
+//                        updateNotification(notification);
+//                        mAdaptiveScanHelper.stop();
+//                        break;
+//                    case BluetoothAdapter.STATE_ON:
+//                        if (!CorUtility.isLocationOn(CoronaApplication.instance.getContext())) {
+//                            notification = getNotification(Constants.PLEASE_ALLOW_LOCATION);
+//                            updateNotification(notification);
+//                        } else {
+//                            notification = getNotification(Constants.NOTIFICATION_DESC);
+//                            updateNotification(notification);
+//                        }
+//                        mGattServer.addGattService();
+//                        advertiseAndScan();
+//                        break;
+//                }
+//            }
         }
     };
 
@@ -426,16 +427,16 @@ public class BluetoothScanningService extends Service implements AdaptiveScanHel
     @Override
     public void onModeChange(int scanMode, int advertisementMode) {
         try {
-            if (isBluetoothAvailable()) {
-                if (mBluetoothLeScanner != null) {
-                    mBluetoothLeScanner.stopScan(mScanCallback);
-                }
-                mGattServer.stopAdvertising();
-                discover(scanMode);
-                mGattServer.advertise(advertisementMode);
-            } else {
-                Logger.d(TAG, "onModeChange failed due to bluetooth not available");
-            }
+//            if (isBluetoothAvailable()) {
+//                if (mBluetoothLeScanner != null) {
+//                    mBluetoothLeScanner.stopScan(mScanCallback);
+//                }
+//                mGattServer.stopAdvertising();
+//                discover(scanMode);
+//                mGattServer.advertise(advertisementMode);
+//            } else {
+//                Logger.d(TAG, "onModeChange failed due to bluetooth not available");
+//            }
         } catch (Exception ex) {
             //Handle Android internal exception for BT adapter not turned ON(Known Android bug)
             CorUtilityKt.reportException(ex);

@@ -26,7 +26,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.crashlytics.android.Crashlytics
-import com.google.firebase.iid.FirebaseInstanceId
+//import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import nic.goi.aarogyasetu.BuildConfig
@@ -130,59 +130,60 @@ class CorUtility {
         }
 
         fun registerUser(context: Context, listener: PermissionActivity.LoginSuccess) {
-            val client =
-                NetworkClient.getRetrofitClient(false, false, true, "")
-
-            var registerationData = RegisterationData(
-                BluetoothAdapter.getDefaultAdapter().name,
-                getBluetoothMacAddress(), FirebaseInstanceId.getInstance().getToken()
-            )
-
-            registerationData.isBlAllowed =
-                (isBluetoothPermissionAvailable(CoronaApplication.instance))
-            registerationData.isLocAllowed =
-                isLocationPermissionAvailable(CoronaApplication.instance)
-            registerationData.isBlOn = isBluetoothAvailable()
-            registerationData.isLocOn = isLocationOn(CoronaApplication.instance)
-
-            val eventName =
-                if (!registerationData.lat.isNullOrBlank()) EventNames.EVENT_REGISTER_LOC
-                else EventNames.EVENT_REGISTER_WITHOUT_LOC
-            AnalyticsUtils.sendBasicEvent(eventName, ScreenNames.SCREEN_PERMISSION)
-
-            val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
-                .registerUser(getHeaders(false), registerationData)
-
-            call.enqueue(object : retrofit2.Callback<JsonElement> {
-
-
-                override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        parseResponse(response, listener)
-                        if (!SharedPref.getStringParams(
-                                CoronaApplication.instance,
-                                SharedPrefsConstants.UNIQUE_ID,
-                                ""
-                            ).isNullOrEmpty()
-                        ) {
-                            listener.loginSuccess()
-                            checkStatus(context)
-                        } else {
-                            checkStatus(context, listener)
-                        }
-                    } else {
-                        listener.loginFailed()
-                    }
-                }
-
-                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                    val e = Exception(t)
-                    e.reportException()
-                    listener.loginFailed()
-                }
-
-
-            })
+            listener.loginSuccess()
+//            val client =
+//                NetworkClient.getRetrofitClient(false, false, true, "")
+//
+//            var registerationData = RegisterationData(
+//                BluetoothAdapter.getDefaultAdapter().name,
+//                getBluetoothMacAddress(), FirebaseInstanceId.getInstance().getToken()
+//            )
+//
+//            registerationData.isBlAllowed =
+//                (isBluetoothPermissionAvailable(CoronaApplication.instance))
+//            registerationData.isLocAllowed =
+//                isLocationPermissionAvailable(CoronaApplication.instance)
+//            registerationData.isBlOn = isBluetoothAvailable()
+//            registerationData.isLocOn = isLocationOn(CoronaApplication.instance)
+//
+//            val eventName =
+//                if (!registerationData.lat.isNullOrBlank()) EventNames.EVENT_REGISTER_LOC
+//                else EventNames.EVENT_REGISTER_WITHOUT_LOC
+//            AnalyticsUtils.sendBasicEvent(eventName, ScreenNames.SCREEN_PERMISSION)
+//
+//            val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
+//                .registerUser(getHeaders(false), registerationData)
+//
+//            call.enqueue(object : retrofit2.Callback<JsonElement> {
+//
+//
+//                override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+//                    if (response.isSuccessful && response.body() != null) {
+//                        parseResponse(response, listener)
+//                        if (!SharedPref.getStringParams(
+//                                CoronaApplication.instance,
+//                                SharedPrefsConstants.UNIQUE_ID,
+//                                ""
+//                            ).isNullOrEmpty()
+//                        ) {
+//                            listener.loginSuccess()
+//                            checkStatus(context)
+//                        } else {
+//                            checkStatus(context, listener)
+//                        }
+//                    } else {
+//                        listener.loginFailed()
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+//                    val e = Exception(t)
+//                    e.reportException()
+//                    listener.loginFailed()
+//                }
+//
+//
+//            })
         }
 
 
@@ -191,6 +192,12 @@ class CorUtility {
          * This method also get unique id of the user
          */
         fun checkStatus(context: Context, listener: PermissionActivity.LoginSuccess? = null) {
+            SharedPref.setBooleanParams(
+              context,
+              Constants.PUSH_COVID_POSTIVE_P,
+              false
+            )
+            return
             if (!AuthUtility.isSignedIn()) return
             val client =
                 NetworkClient.getRetrofitClient(false, false, true, "")
@@ -471,11 +478,12 @@ class CorUtility {
             } else {
                 isForceUpgrade = false
             }
+            isForceUpgrade = false
         }
 
         @JvmStatic
         fun isForceUpgradeRequired(): Boolean {
-            return isForceUpgrade
+            return false
         }
 
         @JvmStatic
@@ -488,11 +496,6 @@ class CorUtility {
                 ActivityCompat.requestPermissions(
                     context,
                     arrayOf(
-                        Manifest.permission.BLUETOOTH,
-                        Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     ),
                     permissionRequestCode
                 )
@@ -500,10 +503,6 @@ class CorUtility {
                 ActivityCompat.requestPermissions(
                     context,
                     arrayOf(
-                        Manifest.permission.BLUETOOTH,
-                        Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
                     ),
                     permissionRequestCode
                 )
@@ -536,13 +535,13 @@ class CorUtility {
 
             try {
                 gps_enabled =
-                    locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
+                    false
             } catch (e: Exception) {
             }
 
             try {
                 network_enabled =
-                    locationManager?.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ?: false
+                    false
             } catch (e: Exception) {
             }
 
@@ -584,6 +583,7 @@ class CorUtility {
 
         @JvmStatic
         fun startService(activity: Activity) {
+            return
             if (!BluetoothScanningService.serviceRunning) {
                 val uniqueId = SharedPref.getStringParams(
                     CoronaApplication.getInstance(),
@@ -655,6 +655,7 @@ class CorUtility {
 
         @JvmStatic
         fun isBluetoothAvailable(): Boolean {
+            return true
             if (isBluetoothPermissionAvailable(CoronaApplication.instance.context)) {
                 val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
                 return bluetoothAdapter != null &&
